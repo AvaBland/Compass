@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { runDaily, extractIntelligenceFile, extractObservation } from '../utils/api'
 
-export default function DailyMode({ apiKey, model, intelligenceFile, setIntelligenceFile }) {
+export default function DailyMode({ apiKey, model, baseUrl, intelligenceFile, setIntelligenceFile }) {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [observation, setObservation] = useState(null)
@@ -25,7 +25,7 @@ export default function DailyMode({ apiKey, model, intelligenceFile, setIntellig
     setDone(false)
 
     try {
-      const response = await runDaily(apiKey, model, intelligenceFile, input)
+      const response = await runDaily(apiKey, model, baseUrl, intelligenceFile, input)
       const updatedFile = extractIntelligenceFile(response)
       const obs = extractObservation(response)
 

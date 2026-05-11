@@ -9,7 +9,7 @@ import Settings from './components/Settings'
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
-  const { intelligenceFile, setIntelligenceFile, apiKey, setApiKey, model, setModel } = useStorage()
+  const { intelligenceFile, setIntelligenceFile, apiKey, setApiKey, model, setModel, baseUrl, setBaseUrl } = useStorage()
 
   return (
     <div className="app">
@@ -31,6 +31,7 @@ export default function App() {
           <OnboardingMode
             apiKey={apiKey}
             model={model}
+            baseUrl={baseUrl}
             setIntelligenceFile={setIntelligenceFile}
             setActiveTab={setActiveTab}
           />
@@ -39,6 +40,7 @@ export default function App() {
           <DailyMode
             apiKey={apiKey}
             model={model}
+            baseUrl={baseUrl}
             intelligenceFile={intelligenceFile}
             setIntelligenceFile={setIntelligenceFile}
           />
@@ -47,6 +49,7 @@ export default function App() {
           <WeeklyMode
             apiKey={apiKey}
             model={model}
+            baseUrl={baseUrl}
             intelligenceFile={intelligenceFile}
             setIntelligenceFile={setIntelligenceFile}
           />
@@ -57,6 +60,8 @@ export default function App() {
             setApiKey={setApiKey}
             model={model}
             setModel={setModel}
+            baseUrl={baseUrl}
+            setBaseUrl={setBaseUrl}
             intelligenceFile={intelligenceFile}
             setIntelligenceFile={setIntelligenceFile}
           />

@@ -1,15 +1,15 @@
 import { COMPASS_SYSTEM_PROMPT, ONBOARDING_APPEND, DAILY_APPEND, WEEKLY_APPEND } from './systemPrompt'
 
-const API_URL = 'https://api.anthropic.com/v1/messages'
+const DEFAULT_BASE_URL = 'https://llm.helix.com/llm/api'
 
-async function callClaude(apiKey, model, systemPrompt, userMessage) {
-  const response = await fetch(API_URL, {
+async function callClaude(apiKey, model, systemPrompt, userMessage, baseUrl) {
+  const url = `${(baseUrl || DEFAULT_BASE_URL).replace(/\/$/, '')}/messages`
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': apiKey,
       'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
     },
     body: JSON.stringify({
       model,
@@ -32,7 +32,7 @@ async function callClaude(apiKey, model, systemPrompt, userMessage) {
   return data.content[0].text
 }
 
-export async function runOnboarding(apiKey, model, historicalData, existingKnowledge) {
+export async function runOnboarding(apiKey, model, baseUrl, historicalData, existingKnowledge) {
   const systemPrompt = COMPASS_SYSTEM_PROMPT + ONBOARDING_APPEND
   const userMessage = [
     'HISTORICAL OUTREACH DATA:',
@@ -41,10 +41,10 @@ export async function runOnboarding(apiKey, model, historicalData, existingKnowl
     'EXISTING KNOWLEDGE ABOUT PERSONAS, ORGANIZATIONS, MESSAGING, AND MARKET POSITIONING:',
     existingKnowledge || '(none provided)',
   ].join('\n')
-  return callClaude(apiKey, model, systemPrompt, userMessage)
+  return callClaude(apiKey, model, systemPrompt, userMessage, baseUrl)
 }
 
-export async function runDaily(apiKey, model, intelligenceFile, todayData) {
+export async function runDaily(apiKey, model, baseUrl, intelligenceFile, todayData) {
   const systemPrompt = COMPASS_SYSTEM_PROMPT + DAILY_APPEND
   const userMessage = [
     'CURRENT INTELLIGENCE FILE:',
@@ -53,16 +53,16 @@ export async function runDaily(apiKey, model, intelligenceFile, todayData) {
     "TODAY'S DATA / OBSERVATION:",
     todayData,
   ].join('\n')
-  return callClaude(apiKey, model, systemPrompt, userMessage)
+  return callClaude(apiKey, model, systemPrompt, userMessage, baseUrl)
 }
 
-export async function runWeekly(apiKey, model, intelligenceFile, finalNotes) {
+export async function runWeekly(apiKey, model, baseUrl, intelligenceFile, finalNotes) {
   const systemPrompt = COMPASS_SYSTEM_PROMPT + WEEKLY_APPEND
   const parts = ['CURRENT INTELLIGENCE FILE:', intelligenceFile]
   if (finalNotes?.trim()) {
     parts.push('', 'FINAL NOTES BEFORE BRIEFING:', finalNotes)
   }
-  return callClaude(apiKey, model, systemPrompt, parts.join('\n'))
+  return callClaude(apiKey, model, systemPrompt, parts.join('\n'), baseUrl)
 }
 
 export function extractIntelligenceFile(response) {

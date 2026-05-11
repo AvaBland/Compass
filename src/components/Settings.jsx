@@ -1,8 +1,9 @@
 import { useState } from 'react'
 
-export default function Settings({ apiKey, setApiKey, model, setModel, intelligenceFile, setIntelligenceFile }) {
+export default function Settings({ apiKey, setApiKey, model, setModel, baseUrl, setBaseUrl, intelligenceFile, setIntelligenceFile }) {
   const [keyInput, setKeyInput] = useState(apiKey)
   const [modelInput, setModelInput] = useState(model)
+  const [baseUrlInput, setBaseUrlInput] = useState(baseUrl)
   const [saved, setSaved] = useState(false)
   const [importText, setImportText] = useState('')
   const [importMsg, setImportMsg] = useState('')
@@ -10,6 +11,7 @@ export default function Settings({ apiKey, setApiKey, model, setModel, intellige
   function handleSave() {
     setApiKey(keyInput.trim())
     setModel(modelInput.trim())
+    setBaseUrl(baseUrlInput.trim())
     setSaved(true)
     setTimeout(() => setSaved(false), 2500)
   }
@@ -55,38 +57,45 @@ export default function Settings({ apiKey, setApiKey, model, setModel, intellige
       </div>
 
       <div className="settings-section">
-        <div className="settings-section-title">Anthropic API Key</div>
+        <div className="settings-section-title">API Configuration</div>
         <div className="settings-section-desc">
-          Stored locally in your browser. Never sent anywhere except directly to the Anthropic API.
+          Stored locally in your browser. All calls go through your company's LiteLLM proxy.
         </div>
-
-        {maskedKey && (
-          <div className="api-key-display">Current: {maskedKey}</div>
-        )}
 
         <div className="form-group">
           <label className="form-label">
-            API Key
-            <span>— starts with sk-ant-</span>
+            Auth Token
+            <span>— your ANTHROPIC_AUTH_TOKEN value</span>
           </label>
           <input
             type="password"
             value={keyInput}
             onChange={e => setKeyInput(e.target.value)}
-            placeholder="sk-ant-api03-..."
+            placeholder="Paste your auth token here"
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">
+            Proxy Base URL
+          </label>
+          <input
+            type="text"
+            value={baseUrlInput}
+            onChange={e => setBaseUrlInput(e.target.value)}
+            placeholder="https://llm.helix.com/llm/api"
           />
         </div>
 
         <div className="form-group">
           <label className="form-label">
             Model
-            <span>— Claude model ID</span>
           </label>
           <input
             type="text"
             value={modelInput}
             onChange={e => setModelInput(e.target.value)}
-            placeholder="claude-sonnet-4-20250514"
+            placeholder="bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0"
           />
         </div>
 

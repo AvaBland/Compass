@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { runWeekly, extractIntelligenceFile, extractBriefing } from '../utils/api'
 
-export default function WeeklyMode({ apiKey, model, intelligenceFile, setIntelligenceFile }) {
+export default function WeeklyMode({ apiKey, model, baseUrl, intelligenceFile, setIntelligenceFile }) {
   const [finalNotes, setFinalNotes] = useState('')
   const [loading, setLoading] = useState(false)
   const [briefing, setBriefing] = useState(null)
@@ -23,7 +23,7 @@ export default function WeeklyMode({ apiKey, model, intelligenceFile, setIntelli
     setBriefing(null)
 
     try {
-      const response = await runWeekly(apiKey, model, intelligenceFile, finalNotes)
+      const response = await runWeekly(apiKey, model, baseUrl, intelligenceFile, finalNotes)
       const updatedFile = extractIntelligenceFile(response)
       const briefingText = extractBriefing(response)
 

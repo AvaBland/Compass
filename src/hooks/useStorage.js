@@ -8,7 +8,10 @@ export function useStorage() {
     () => localStorage.getItem('compass_api_key') || ''
   )
   const [model, setModelState] = useState(
-    () => localStorage.getItem('compass_model') || 'claude-sonnet-4-20250514'
+    () => localStorage.getItem('compass_model') || 'bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0'
+  )
+  const [baseUrl, setBaseUrlState] = useState(
+    () => localStorage.getItem('compass_base_url') || 'https://llm.helix.com/llm/api'
   )
 
   const setIntelligenceFile = (value) => {
@@ -26,5 +29,10 @@ export function useStorage() {
     setModelState(value)
   }
 
-  return { intelligenceFile, setIntelligenceFile, apiKey, setApiKey, model, setModel }
+  const setBaseUrl = (value) => {
+    localStorage.setItem('compass_base_url', value)
+    setBaseUrlState(value)
+  }
+
+  return { intelligenceFile, setIntelligenceFile, apiKey, setApiKey, model, setModel, baseUrl, setBaseUrl }
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { runOnboarding, extractIntelligenceFile } from '../utils/api'
 
-export default function OnboardingMode({ apiKey, model, setIntelligenceFile, setActiveTab }) {
+export default function OnboardingMode({ apiKey, model, baseUrl, setIntelligenceFile, setActiveTab }) {
   const [historicalData, setHistoricalData] = useState('')
   const [existingKnowledge, setExistingKnowledge] = useState('')
   const [loading, setLoading] = useState(false)
@@ -23,7 +23,7 @@ export default function OnboardingMode({ apiKey, model, setIntelligenceFile, set
     setResult(null)
 
     try {
-      const response = await runOnboarding(apiKey, model, historicalData, existingKnowledge)
+      const response = await runOnboarding(apiKey, model, baseUrl, historicalData, existingKnowledge)
       const intelligenceFile = extractIntelligenceFile(response)
 
       if (intelligenceFile) {
