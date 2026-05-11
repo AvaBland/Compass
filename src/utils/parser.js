@@ -5,7 +5,7 @@ export function parseIntelligenceFile(text) {
     raw: text,
     lastUpdated: '',
     sessionsCompleted: 0,
-    strategicPosture: null,
+    performanceOverview: null,
     personas: [],
     organizations: [],
     narrative: null,
@@ -22,7 +22,7 @@ export function parseIntelligenceFile(text) {
 
   const sections = splitSections(text)
 
-  if (sections.A) result.strategicPosture = parseStrategicPosture(sections.A)
+  if (sections.A) result.performanceOverview = parsePerformanceOverview(sections.A)
   if (sections.B) result.personas = parsePersonas(sections.B)
   if (sections.C) result.organizations = parseOrganizations(sections.C)
   if (sections.D) result.narrative = parseNarrative(sections.D)
@@ -68,8 +68,16 @@ function extractField(text, label) {
   return m ? m[1].trim() : ''
 }
 
-function parseStrategicPosture(text) {
+function parsePerformanceOverview(text) {
   return {
+    // New Performance Overview fields
+    bestSendTime: extractField(text, 'Best send time'),
+    topSubjectLines: extractField(text, 'Top subject lines by open rate'),
+    highestReplySegments: extractField(text, 'Highest reply segments'),
+    highestConversionSegments: extractField(text, 'Highest conversion segments'),
+    negativeTrends: extractField(text, 'Negative trends'),
+    recommendations: extractField(text, 'Recommendations to act on now'),
+    // Legacy Strategic Posture fields (backward compat)
     icpHypothesis: extractField(text, 'Current best ICP hypothesis'),
     strongestNarrative: extractField(text, 'Current strongest narrative angle'),
     weakestNarrative: extractField(text, 'Current weakest narrative angle'),
@@ -83,7 +91,15 @@ function parsePersonas(text) {
   const blocks = text.split(/\n(?=Persona:)/i).filter(b => b.trim())
   return blocks.map(block => ({
     title: extractField(block, 'Persona'),
+    lastOutreachDate: extractField(block, 'Last outreach date'),
+    totalEmailsSent: extractField(block, 'Total emails sent'),
+    openReplyRate: extractField(block, 'Open rate / Reply rate'),
     engagementPattern: extractField(block, 'Engagement pattern'),
+    expertCohorts: extractField(block, 'Expert cohorts'),
+    frameworkAnalysis: extractField(block, 'Email framework analysis'),
+    valueProps: extractField(block, 'Value propositions used'),
+    resonantSubjectLines: extractField(block, 'Subject lines — resonant'),
+    flatSubjectLines: extractField(block, 'Subject lines — flat'),
     resonantAngles: extractField(block, 'Resonant angles'),
     resistantAngles: extractField(block, 'Resistant angles'),
     bestChannel: extractField(block, 'Best channel'),
@@ -100,6 +116,8 @@ function parseOrganizations(text) {
     engagementPattern: extractField(block, 'Engagement pattern'),
     conversionSignal: extractField(block, 'Conversion rate signal'),
     characteristics: extractField(block, 'Notable characteristics'),
+    personasReached: extractField(block, 'Personas reached'),
+    crossPersonaThemes: extractField(block, 'Cross-persona themes'),
     icpFit: extractField(block, 'ICP fit assessment'),
     confidence: extractField(block, 'Confidence'),
     lastUpdated: extractField(block, 'Last updated'),

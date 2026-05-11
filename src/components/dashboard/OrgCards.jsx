@@ -2,7 +2,7 @@ import { confidenceColor } from '../../utils/parser'
 
 export default function OrgCards({ organizations }) {
   return (
-    <div className="panel">
+    <div className="panel dashboard-full">
       <div className="panel-header">
         <span className="panel-label">Organization Intelligence</span>
         <span className="text-muted text-small">{organizations.length} segments</span>
@@ -70,6 +70,20 @@ function OrgCard({ org }) {
         <div className="entity-card-field">
           <div className="entity-card-field-label">Characteristics</div>
           <div className="entity-card-field-value">{org.characteristics}</div>
+        </div>
+      )}
+
+      {org.personasReached && (
+        <div className="entity-card-field">
+          <div className="entity-card-field-label">Personas Reached</div>
+          <div className="entity-card-field-value">{org.personasReached}</div>
+        </div>
+      )}
+
+      {org.crossPersonaThemes && (
+        <div className="entity-card-field">
+          <div className="entity-card-field-label" style={{ color: 'var(--accent-hover)' }}>Cross-Persona Themes</div>
+          <div className="entity-card-field-value">{org.crossPersonaThemes}</div>
         </div>
       )}
     </div>

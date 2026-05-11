@@ -263,22 +263,20 @@ Last updated: [date]
 Sessions completed: [n]
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SECTION A — STRATEGIC POSTURE
+SECTION A — PERFORMANCE OVERVIEW
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Current best ICP hypothesis:
-[Who we believe is the highest-fit buyer based on accumulated engagement data]
-
-Current strongest narrative angle:
-[The message framing that is consistently producing the most engagement]
-
-Current weakest narrative angle:
-[The framing that is consistently falling flat]
-
-Market timing assessment:
-[Is the market warming, cooling, or stable? Any timing signals?]
-
-Top open strategic question:
-[The one thing we most need to learn from the next few weeks of outreach]
+Best send time: [day of week and time of day producing highest engagement — e.g. "Tuesday 10am ET (3-week pattern)"]
+Top subject lines by open rate:
+  1. [subject line] — [open rate or signal]
+  2. [subject line] — [open rate or signal]
+  3. [subject line] — [open rate or signal]
+Highest reply segments: [persona type / org type / geography showing highest reply rates]
+Highest conversion segments: [which segments are converting to meetings, demos, or pilots]
+Negative trends: [what is declining or consistently underperforming]
+Recommendations to act on now:
+  1. [specific action]
+  2. [specific action]
+  3. [specific action]
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SECTION B — PERSONA INTELLIGENCE
@@ -286,7 +284,20 @@ SECTION B — PERSONA INTELLIGENCE
 [Repeat block per persona type observed]
 
 Persona: [Title / function]
+Last outreach date: [most recent date any outreach data was input for this persona group]
+Total emails sent: [running count]
+Open rate / Reply rate: [e.g. "42% open / 3% reply — based on N sends"]
 Engagement pattern: [How this persona typically behaves — opens, clicks, replies, ghosts]
+Expert cohorts:
+  [Cohort name] — Last contacted: [date] — Emails sent: [count] — [signal notes]
+Email framework analysis:
+  [Framework type] — [Used N times] — [Result: worked / mixed / flat]
+Value propositions used:
+  [Angle or theme] — [Result: worked / didn't work / mixed]
+Subject lines — resonant:
+  [Subject line] — [open rate or signal]
+Subject lines — flat:
+  [Subject line] — [why it failed or flat signal]
 Resonant angles: [What messaging works with this persona]
 Resistant angles: [What messaging fails with this persona]
 Best channel: [Email / LinkedIn / other]
@@ -302,6 +313,8 @@ Org segment: [Type / size / geography / vertical]
 Engagement pattern: [How this org type behaves in aggregate]
 Conversion rate signal: [High / medium / low / unknown]
 Notable characteristics: [Anything distinctive about how this segment engages]
+Personas reached: [which persona types have been contacted at this org type]
+Cross-persona themes: [what resonates across all personas at this org type — the connective tissue]
 ICP fit assessment: [Strong / possible / weak / unknown]
 Confidence: [Confirmed / Emerging / Hypothesis]
 Last updated: [session date]
@@ -377,7 +390,20 @@ Your job:
 2. Update all relevant sections of the Intelligence File
 3. Draw on your training knowledge about healthcare personas (CMOs, Chief Nursing Officers, VPs of Operations, Medical Directors, Tumor Board chairs, oncologists, care coordinators, etc.) and organization types (academic medical centers, large regional health systems, national systems, community hospitals, independent oncology practices, etc.) to enrich your analysis — do not just reflect back what was provided, add context from what you know about these roles, their priorities, and the pressures they are under
 4. IMPORTANT: Section C (Organization Intelligence) must reflect ORGANIZATION TYPES ONLY — such as "Large Academic Medical Center", "Regional Health System", "Community Hospital Network", "National Health System", "Independent Oncology Practice". Never include persona titles or job functions in Section C. Personas belong only in Section B.
-5. Surface a 1-2 sentence observation if something notable was detected, otherwise write NONE
+5. Maintain running state for each persona entry:
+   - "Last outreach date" should reflect the most recent date any outreach data was provided for that persona group
+   - "Total emails sent" should be incremented when new send volume is reported for that persona
+   - Expert cohorts (named sub-groups like "Oncology Researchers at AMCs") must be nested under their parent persona in Section B — never listed as standalone persona entries
+6. When the user provides email content alongside engagement metrics (open rate, click rate, reply rate), perform deep content synthesis:
+   - Analyze the email's structure: opening hook type (curiosity / pain / stat / question), value proposition angle, CTA type (reply / click / schedule), tone, and length signal
+   - Cross-reference the structure with the engagement result to explain WHY the pattern occurred:
+     • High click + no reply → email built genuine interest and delivered value, but the CTA created friction — either too large an ask, wrong timing, or the reply mechanism is unclear
+     • High open + no click + no reply → subject line over-promised; email body under-delivered on the expectation set
+     • Low open + high reply rate among openers → niche but highly resonant — strong ICP fit signal in a small segment
+     • High open + high click + no reply → strong interest signal with a broken conversion step — diagnose the CTA specifically
+   - Store this synthesis under the relevant persona's "Email framework analysis" and in Section D narrative intelligence
+   - Do not simply restate the engagement numbers — explain the underlying mechanism
+7. Surface a 1-2 sentence observation if something notable was detected, otherwise write NONE
 
 Return in exactly this format:
 [OBSERVATION]
