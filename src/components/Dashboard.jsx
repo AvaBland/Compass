@@ -85,8 +85,8 @@ export default function Dashboard({ apiKey, model, baseUrl, intelligenceFile, se
               onKeyDown={handleKeyDown}
               autoFocus
               placeholder={intelligenceFile
-                ? "Add anything — reply received, open rates from a send, notes from a call, webinar registrations, a pattern you noticed. Any format."
-                : "No data yet. Paste everything you have — historical outreach data, email performance, what you know about your personas, what's worked and what hasn't. The more you give Compass, the better the starting intelligence."
+                ? "Add anything — reply received, open rates from a send, notes from a call, webinar registrations, a pattern you noticed. Any format.\n\nFrom Google Sheets: copy cells and paste directly, or use the Upload CSV button below."
+                : "No data yet. Paste everything you have — historical outreach data, email performance, what you know about your personas, what's worked and what hasn't.\n\nFrom Google Sheets: copy cells and paste directly, or export as CSV (File → Download → CSV) and upload below."
               }
             />
             {!apiKey && (
@@ -107,6 +107,7 @@ export default function Dashboard({ apiKey, model, baseUrl, intelligenceFile, se
                 {loading && <span className="spinner" />}
                 {loading ? 'Updating…' : 'Update Intelligence'}
               </button>
+              <FileLoader onLoad={text => setInput(prev => prev ? prev + '\n\n' + text : text)} />
               <span className="text-muted text-small">⌘↵ to submit</span>
               {intelligenceFile && (
                 <button className="btn btn-secondary btn-sm" style={{ marginLeft: 'auto' }}
@@ -156,6 +157,23 @@ function exportFile(text) {
   a.download = `compass-intelligence-${new Date().toISOString().slice(0, 10)}.txt`
   a.click()
   URL.revokeObjectURL(url)
+}
+
+function FileLoader({ onLoad }) {
+  function handleChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = ev => { if (ev.target.result) onLoad(ev.target.result) }
+    reader.readAsText(file)
+    e.target.value = ''
+  }
+  return (
+    <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer' }} title="Upload a CSV or text file">
+      Upload CSV
+      <input type="file" accept=".csv,.txt,.tsv" style={{ display: 'none' }} onChange={handleChange} />
+    </label>
+  )
 }
 
 function ImportButton({ setIntelligenceFile }) {
