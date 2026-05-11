@@ -368,40 +368,54 @@ SECTION G — PATTERN LOG
 
 [Date] | [Confirmed/Emerging/Retired] | [Finding in one sentence]`
 
-export const ONBOARDING_APPEND = `
+export const UPDATE_APPEND = `
 
-The user is in onboarding mode. Synthesize everything provided into a complete starter Compass Intelligence File — fully populated across all sections. Label confirmed findings vs. hypotheses. This is the foundation for all future sessions.
+The user is adding new data or observations. This is the only data input mode — used for everything from initial setup through ongoing weekly updates.
 
-Return your response in exactly this format — start directly with the marker, no preamble:
-[INTELLIGENCE FILE]
-COMPASS INTELLIGENCE FILE
-Last updated: [today's date]
-Sessions completed: 1
-[complete Intelligence File content across all sections A-G]
-[/INTELLIGENCE FILE]`
+Your job:
+1. Absorb the input fully
+2. Update all relevant sections of the Intelligence File
+3. Draw on your training knowledge about healthcare personas (CMOs, Chief Nursing Officers, VPs of Operations, Medical Directors, Tumor Board chairs, oncologists, care coordinators, etc.) and organization types (academic medical centers, large regional health systems, national systems, community hospitals, independent oncology practices, etc.) to enrich your analysis — do not just reflect back what was provided, add context from what you know about these roles, their priorities, and the pressures they are under
+4. IMPORTANT: Section C (Organization Intelligence) must reflect ORGANIZATION TYPES ONLY — such as "Large Academic Medical Center", "Regional Health System", "Community Hospital Network", "National Health System", "Independent Oncology Practice". Never include persona titles or job functions in Section C. Personas belong only in Section B.
+5. Surface a 1-2 sentence observation if something notable was detected, otherwise write NONE
 
-export const DAILY_APPEND = `
-
-The user is adding a daily data entry. Absorb this input into the Intelligence File. Update any relevant sections. Surface a brief observation only if something notable is detected. Do not produce a full briefing. Return the complete updated Intelligence File in your response so the app can save it.
-
-Return your response in exactly this format:
+Return in exactly this format:
 [OBSERVATION]
-(write a 1-3 sentence observation here if something notable was detected, or write NONE if nothing notable)
+(1-2 sentence observation, or NONE)
 [/OBSERVATION]
 [INTELLIGENCE FILE]
 COMPASS INTELLIGENCE FILE
-[complete updated Intelligence File here]
+[complete updated Intelligence File]
 [/INTELLIGENCE FILE]`
 
-export const WEEKLY_APPEND = `
+export const BRIEFING_APPEND = `
 
-The user is requesting the Monday briefing. The Intelligence File is current. Produce the full structured briefing: Part A (What We're Seeing), Part B (Intelligence Highlights if warranted), Part C (This Week's Actions — max 5, fully specified), Part D (Content Recommendations — max 3), Part E (Hold/Deprioritize). Then produce the updated Intelligence File.
+Generate a concise executive briefing. The audience is sales leadership and reps in a Monday meeting. Be specific and actionable — every sentence must change a decision. No filler, no generic advice.
 
-Return your response in exactly this format:
+Structure your response exactly as follows:
+
+WHAT'S WORKING
+2-3 bullet points. Name specific personas, org types, or message angles producing positive signal and why they are working.
+
+WHAT'S NOT WORKING
+2-3 bullet points. Name what is underperforming, which segments, and the most likely root cause.
+
+RE-ENGAGEMENT PRIORITIES
+Up to 5 numbered items. For each:
+• WHO: specific persona + org type
+• HOW: exact message angle and channel
+• WHY: the signal that makes this the right move right now
+
+HOLD / PULL BACK
+Up to 3 items. What to stop or pause and why.
+
+Keep the entire briefing under 500 words. Then return the updated Intelligence File.
+
+Return in exactly this format:
 [BRIEFING]
-(full Monday Briefing here — Parts A through E)
+(full briefing as structured above)
 [/BRIEFING]
 [INTELLIGENCE FILE]
 COMPASS INTELLIGENCE FILE
-[complete updated Intelligence File here]
+[complete updated Intelligence File]
 [/INTELLIGENCE FILE]`

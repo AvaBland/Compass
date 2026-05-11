@@ -2,9 +2,7 @@ import { useState } from 'react'
 import { useStorage } from './hooks/useStorage'
 import Navigation from './components/Navigation'
 import Dashboard from './components/Dashboard'
-import OnboardingMode from './components/OnboardingMode'
-import DailyMode from './components/DailyMode'
-import WeeklyMode from './components/WeeklyMode'
+import BriefingPage from './components/BriefingPage'
 import Settings from './components/Settings'
 
 export default function App() {
@@ -22,36 +20,22 @@ export default function App() {
       <main className="main-content">
         {activeTab === 'dashboard' && (
           <Dashboard
+            apiKey={apiKey}
+            model={model}
+            baseUrl={baseUrl}
             intelligenceFile={intelligenceFile}
             setIntelligenceFile={setIntelligenceFile}
             setActiveTab={setActiveTab}
           />
         )}
-        {activeTab === 'onboarding' && (
-          <OnboardingMode
+        {activeTab === 'briefing' && (
+          <BriefingPage
             apiKey={apiKey}
             model={model}
             baseUrl={baseUrl}
+            intelligenceFile={intelligenceFile}
             setIntelligenceFile={setIntelligenceFile}
             setActiveTab={setActiveTab}
-          />
-        )}
-        {activeTab === 'daily' && (
-          <DailyMode
-            apiKey={apiKey}
-            model={model}
-            baseUrl={baseUrl}
-            intelligenceFile={intelligenceFile}
-            setIntelligenceFile={setIntelligenceFile}
-          />
-        )}
-        {activeTab === 'weekly' && (
-          <WeeklyMode
-            apiKey={apiKey}
-            model={model}
-            baseUrl={baseUrl}
-            intelligenceFile={intelligenceFile}
-            setIntelligenceFile={setIntelligenceFile}
           />
         )}
         {activeTab === 'settings' && (

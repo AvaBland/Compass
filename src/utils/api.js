@@ -1,4 +1,4 @@
-import { COMPASS_SYSTEM_PROMPT, ONBOARDING_APPEND, DAILY_APPEND, WEEKLY_APPEND } from './systemPrompt'
+import { COMPASS_SYSTEM_PROMPT, UPDATE_APPEND, BRIEFING_APPEND } from './systemPrompt'
 
 const DEFAULT_BASE_URL = 'https://llm.helix.com/llm/api'
 
@@ -32,37 +32,20 @@ async function callClaude(apiKey, model, systemPrompt, userMessage, baseUrl) {
   return data.content[0].text
 }
 
-export async function runOnboarding(apiKey, model, baseUrl, historicalData, existingKnowledge) {
-  const systemPrompt = COMPASS_SYSTEM_PROMPT + ONBOARDING_APPEND
-  const userMessage = [
-    'HISTORICAL OUTREACH DATA:',
-    historicalData,
-    '',
-    'EXISTING KNOWLEDGE ABOUT PERSONAS, ORGANIZATIONS, MESSAGING, AND MARKET POSITIONING:',
-    existingKnowledge || '(none provided)',
-  ].join('\n')
-  return callClaude(apiKey, model, systemPrompt, userMessage, baseUrl)
-}
-
-export async function runDaily(apiKey, model, baseUrl, intelligenceFile, todayData) {
-  const systemPrompt = COMPASS_SYSTEM_PROMPT + DAILY_APPEND
-  const userMessage = [
-    'CURRENT INTELLIGENCE FILE:',
-    intelligenceFile,
-    '',
-    "TODAY'S DATA / OBSERVATION:",
-    todayData,
-  ].join('\n')
-  return callClaude(apiKey, model, systemPrompt, userMessage, baseUrl)
-}
-
-export async function runWeekly(apiKey, model, baseUrl, intelligenceFile, finalNotes) {
-  const systemPrompt = COMPASS_SYSTEM_PROMPT + WEEKLY_APPEND
-  const parts = ['CURRENT INTELLIGENCE FILE:', intelligenceFile]
-  if (finalNotes?.trim()) {
-    parts.push('', 'FINAL NOTES BEFORE BRIEFING:', finalNotes)
+export async function updateIntelligence(apiKey, model, baseUrl, intelligenceFile, newData) {
+  const systemPrompt = COMPASS_SYSTEM_PROMPT + UPDATE_APPEND
+  const parts = []
+  if (intelligenceFile) {
+    parts.push('CURRENT INTELLIGENCE FILE:', intelligenceFile, '')
   }
+  parts.push('NEW DATA / OBSERVATIONS:', newData)
   return callClaude(apiKey, model, systemPrompt, parts.join('\n'), baseUrl)
+}
+
+export async function generateBriefing(apiKey, model, baseUrl, intelligenceFile) {
+  const systemPrompt = COMPASS_SYSTEM_PROMPT + BRIEFING_APPEND
+  const userMessage = `CURRENT INTELLIGENCE FILE:\n${intelligenceFile}`
+  return callClaude(apiKey, model, systemPrompt, userMessage, baseUrl)
 }
 
 export function extractIntelligenceFile(response) {

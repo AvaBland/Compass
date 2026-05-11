@@ -641,51 +641,189 @@ textarea.mono { font-family: var(--font-mono); font-size: 12px; }
   line-height: 1.5;
 }
 
-/* ── Mode Pages ── */
-.mode-layout {
-  display: grid;
-  grid-template-columns: 1fr 520px;
-  gap: 32px;
-  align-items: start;
+/* ── Input Section ── */
+.input-section {
+  margin-bottom: 28px;
 }
 
-.mode-layout-full { max-width: 760px; }
-
-.mode-sidebar {
-  position: sticky;
-  top: calc(var(--nav-height) + 32px);
+.input-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0;
 }
 
-.how-it-works {
+.input-section-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.input-section-meta {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.input-panel {
+  margin-top: 16px;
   background: var(--bg-card);
   border: 1px solid var(--border-default);
   border-radius: var(--radius-md);
   padding: 20px;
 }
 
-.how-it-works h3 {
+/* ── Narrative list ── */
+.narrative-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.narrative-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.narrative-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+/* ── Language chips ── */
+.language-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.language-chip {
+  display: inline-flex;
+  padding: 4px 10px;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-dim-hover);
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--accent-hover);
+  font-style: italic;
+}
+
+/* ── Content list ── */
+.content-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.content-list-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  padding-left: 12px;
+  position: relative;
+}
+
+.content-list-item::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+/* ── Briefing ── */
+.briefing-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--section-color, var(--accent));
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.briefing-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.briefing-section-icon {
+  font-size: 14px;
+  color: var(--section-color, var(--accent));
+  font-weight: 700;
+}
+
+.briefing-section-title {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 14px;
+  color: var(--section-color, var(--accent));
 }
 
-.how-it-works ol {
-  padding-left: 16px;
+.briefing-section-body {
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.how-it-works li {
-  font-size: 12px;
-  color: var(--text-secondary);
-  line-height: 1.6;
+.briefing-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.65;
 }
 
-.how-it-works li strong { color: var(--text-primary); }
+.briefing-bullet-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--section-color, var(--accent));
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+.reengagement-item {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reengagement-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.reengagement-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--section-color, var(--accent));
+  min-width: 36px;
+  padding-top: 1px;
+}
+
+.reengagement-value { color: var(--text-primary); }
 
 /* ── Settings ── */
 .settings-layout { max-width: 640px; display: flex; flex-direction: column; gap: 24px; }

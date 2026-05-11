@@ -2,28 +2,13 @@ export default function ContentPanel({ content }) {
   if (!content) return null
 
   const blocks = [
-    { label: 'Format Performance by Segment', value: content.formatPerformance },
-    { label: 'Topic Resonance Map', value: content.topicResonance },
-    { label: 'Content Gap Register', value: content.contentGaps },
+    { label: 'Format Winners by Segment', value: content.formatPerformance },
+    { label: 'Topic Resonance', value: content.topicResonance },
+    { label: 'Content Gaps', value: content.contentGaps },
     { label: 'Voice & Source Credibility', value: content.voiceCredibility },
-    { label: 'Content Fatigue Log', value: content.contentFatigue },
-    { label: 'Content Whitespace', value: content.whitespace },
-  ]
+  ].filter(b => b.value)
 
-  const visibleBlocks = blocks.filter(b => b.value)
-
-  if (visibleBlocks.length === 0) {
-    return (
-      <div className="panel dashboard-full">
-        <div className="panel-header">
-          <span className="panel-label">Content Intelligence</span>
-        </div>
-        <div className="panel-body">
-          <span className="text-muted text-small">No content intelligence yet.</span>
-        </div>
-      </div>
-    )
-  }
+  if (!blocks.length) return null
 
   return (
     <div className="panel dashboard-full">
@@ -32,14 +17,28 @@ export default function ContentPanel({ content }) {
       </div>
       <div className="panel-body">
         <div className="content-subgrid">
-          {visibleBlocks.map(({ label, value }) => (
+          {blocks.map(({ label, value }) => (
             <div key={label} className="content-block">
               <div className="content-block-label">{label}</div>
-              <div className="content-block-value">{value}</div>
+              <ul className="content-list">
+                {parseItems(value).map((item, i) => (
+                  <li key={i} className="content-list-item">{item}</li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
       </div>
     </div>
   )
+}
+
+function parseItems(text) {
+  if (!text) return [text]
+  const lines = text
+    .split(/\n/)
+    .map(l => l.replace(/^[\s•\-–—*\[\]]+/, '').trim())
+    .filter(l => l.length > 5 && !l.match(/^\[.*\]$/))
+    .slice(0, 6)
+  return lines.length ? lines : [text.slice(0, 200)]
 }

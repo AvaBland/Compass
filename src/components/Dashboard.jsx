@@ -1,5 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { parseIntelligenceFile } from '../utils/parser'
+import { updateIntelligence, extractIntelligenceFile, extractObservation } from '../utils/api'
 import StrategicPosture from './dashboard/StrategicPosture'
 import PersonaCards from './dashboard/PersonaCards'
 import OrgCards from './dashboard/OrgCards'
@@ -8,59 +9,141 @@ import ContentPanel from './dashboard/ContentPanel'
 import CompetitivePanel from './dashboard/CompetitivePanel'
 import PatternLog from './dashboard/PatternLog'
 
-export default function Dashboard({ intelligenceFile, setIntelligenceFile, setActiveTab }) {
+export default function Dashboard({ apiKey, model, baseUrl, intelligenceFile, setIntelligenceFile, setActiveTab }) {
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [observation, setObservation] = useState(null)
+  const [error, setError] = useState('')
+  const [inputOpen, setInputOpen] = useState(!intelligenceFile)
+
   const parsed = useMemo(() => parseIntelligenceFile(intelligenceFile), [intelligenceFile])
 
-  if (!intelligenceFile || !parsed) {
-    return (
-      <div className="empty-state">
-        <div className="empty-state-icon">◎</div>
-        <h2>No Intelligence File Yet</h2>
-        <p>
-          Run Onboarding to build your starter Intelligence File from historical data.
-          Once complete, this dashboard will populate automatically.
-        </p>
-        <button className="btn btn-primary" onClick={() => setActiveTab('onboarding')}>
-          Start Onboarding →
-        </button>
-      </div>
-    )
+  async function handleSubmit() {
+    if (!apiKey) { setError('No API key — go to Settings.'); return }
+    if (!input.trim()) return
+    setError('')
+    setLoading(true)
+    setObservation(null)
+    try {
+      const response = await updateIntelligence(apiKey, model, baseUrl, intelligenceFile, input)
+      const updated = extractIntelligenceFile(response)
+      const obs = extractObservation(response)
+      setIntelligenceFile(updated || response)
+      setObservation(obs)
+      setInput('')
+      setInputOpen(false)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
   }
+
+  function handleKeyDown(e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') handleSubmit()
+  }
+
+  const lastUpdated = intelligenceFile
+    ? (intelligenceFile.match(/Last updated:\s*(.+)/i) || [])[1]?.trim()
+    : null
 
   return (
     <div>
-      <div className="page-header" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <div>
-          <h1>Intelligence Dashboard</h1>
-          <p>
-            {parsed.lastUpdated && `Last updated: ${parsed.lastUpdated}`}
-            {parsed.sessionsCompleted > 0 && ` · ${parsed.sessionsCompleted} sessions`}
-          </p>
+      {/* Input section */}
+      <div className="input-section">
+        <div className="input-section-header">
+          <div>
+            <h1 className="input-section-title">Intelligence Dashboard</h1>
+            {lastUpdated && <span className="input-section-meta">Last updated: {lastUpdated}</span>}
+          </div>
+          <div className="btn-row">
+            <button className="btn btn-primary btn-sm" onClick={() => setInputOpen(o => !o)}>
+              {inputOpen ? 'Close' : '+ Add Intelligence'}
+            </button>
+            {intelligenceFile && (
+              <>
+                <button className="btn btn-secondary btn-sm" onClick={() => exportFile(intelligenceFile)}>Export</button>
+                <ImportButton setIntelligenceFile={setIntelligenceFile} />
+              </>
+            )}
+          </div>
         </div>
-        <div className="btn-row">
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => exportFile(intelligenceFile)}
-          >
-            Export
-          </button>
-          <ImportButton setIntelligenceFile={setIntelligenceFile} />
-        </div>
+
+        {inputOpen && (
+          <div className="input-panel">
+            {observation && (
+              <div className="observation-banner">
+                <strong>Signal Detected</strong>
+                {observation}
+              </div>
+            )}
+            {error && <div className="alert alert-error">{error}</div>}
+            <textarea
+              rows={6}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              autoFocus
+              placeholder={intelligenceFile
+                ? "Add anything — reply received, open rates from a send, notes from a call, webinar registrations, a pattern you noticed. Any format."
+                : "No data yet. Paste everything you have — historical outreach data, email performance, what you know about your personas, what's worked and what hasn't. The more you give Compass, the better the starting intelligence."
+              }
+            />
+            {!apiKey && (
+              <div className="alert alert-error" style={{ marginTop: '8px' }}>
+                No API key.{' '}
+                <button className="btn btn-ghost btn-sm" onClick={() => setActiveTab('settings')}
+                  style={{ display: 'inline', padding: 0, color: 'var(--danger)', textDecoration: 'underline' }}>
+                  Go to Settings →
+                </button>
+              </div>
+            )}
+            <div className="btn-row" style={{ marginTop: '12px' }}>
+              <button
+                className="btn btn-primary"
+                onClick={handleSubmit}
+                disabled={loading || !input.trim() || !apiKey}
+              >
+                {loading && <span className="spinner" />}
+                {loading ? 'Updating…' : 'Update Intelligence'}
+              </button>
+              <span className="text-muted text-small">⌘↵ to submit</span>
+              {intelligenceFile && (
+                <button className="btn btn-secondary btn-sm" style={{ marginLeft: 'auto' }}
+                  onClick={() => setActiveTab('briefing')}>
+                  Generate Briefing →
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {!inputOpen && observation && (
+          <div className="observation-banner" style={{ marginTop: '12px' }}>
+            <strong>Last Signal</strong>
+            {observation}
+          </div>
+        )}
       </div>
 
-      <div className="dashboard-grid">
-        <StrategicPosture data={parsed.strategicPosture} />
-
-        <PersonaCards personas={parsed.personas} />
-        <OrgCards organizations={parsed.organizations} />
-
-        <NarrativePanel narrative={parsed.narrative} />
-        <CompetitivePanel competitive={parsed.competitive} />
-
-        <ContentPanel content={parsed.content} />
-
-        <PatternLog patterns={parsed.patternLog} />
-      </div>
+      {/* Dashboard panels */}
+      {!intelligenceFile || !parsed ? (
+        <div className="empty-state" style={{ marginTop: '40px' }}>
+          <div className="empty-state-icon">◎</div>
+          <h2>No intelligence yet</h2>
+          <p>Add your first entry above — paste historical data, campaign results, or anything you know about your market.</p>
+        </div>
+      ) : (
+        <div className="dashboard-grid">
+          <StrategicPosture data={parsed.strategicPosture} />
+          <PersonaCards personas={parsed.personas} />
+          <OrgCards organizations={parsed.organizations} />
+          <NarrativePanel narrative={parsed.narrative} />
+          <CompetitivePanel competitive={parsed.competitive} />
+          <ContentPanel content={parsed.content} />
+          <PatternLog patterns={parsed.patternLog} />
+        </div>
+      )}
     </div>
   )
 }
@@ -80,14 +163,10 @@ function ImportButton({ setIntelligenceFile }) {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
-    reader.onload = ev => {
-      const text = ev.target.result
-      if (text) setIntelligenceFile(text.trim())
-    }
+    reader.onload = ev => { if (ev.target.result) setIntelligenceFile(ev.target.result.trim()) }
     reader.readAsText(file)
     e.target.value = ''
   }
-
   return (
     <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer' }}>
       Import
