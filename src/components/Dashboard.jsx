@@ -4,11 +4,12 @@ import { updateIntelligence, extractIntelligenceFile, extractObservation } from 
 import ActionBoard from './dashboard/ActionBoard'
 import PerformanceOverview from './dashboard/StrategicPosture'
 import PersonaCards from './dashboard/PersonaCards'
-import OrgCards from './dashboard/OrgCards'
+import OrgCoverageMap from './dashboard/OrgCoverageMap'
 import NarrativePanel from './dashboard/NarrativePanel'
 import ContentPanel from './dashboard/ContentPanel'
 import CompetitivePanel from './dashboard/CompetitivePanel'
 import PatternLog from './dashboard/PatternLog'
+import CustomTracking from './dashboard/CustomTracking'
 
 export default function Dashboard({ apiKey, model, baseUrl, intelligenceFile, setIntelligenceFile, setActiveTab }) {
   const [input, setInput] = useState('')
@@ -140,11 +141,19 @@ export default function Dashboard({ apiKey, model, baseUrl, intelligenceFile, se
           <ActionBoard data={parsed.actionBoard} />
           <PerformanceOverview data={parsed.performanceOverview} />
           <PersonaCards personas={parsed.personas} />
-          <OrgCards organizations={parsed.organizations} />
+          <OrgCoverageMap personas={parsed.personas} organizations={parsed.organizations} />
           <NarrativePanel narrative={parsed.narrative} />
           <CompetitivePanel competitive={parsed.competitive} />
           <ContentPanel content={parsed.content} />
           <PatternLog patterns={parsed.patternLog} />
+          <CustomTracking
+            data={parsed.customTracking}
+            apiKey={apiKey}
+            model={model}
+            baseUrl={baseUrl}
+            intelligenceFile={intelligenceFile}
+            setIntelligenceFile={setIntelligenceFile}
+          />
         </div>
       )}
     </div>

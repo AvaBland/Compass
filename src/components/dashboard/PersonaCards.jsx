@@ -30,6 +30,8 @@ function PersonaCard({ persona, isExpanded, onToggle }) {
   const conf = confidenceColor(persona.confidence)
   const dateStr = persona.lastOutreachDate || persona.lastUpdated
   const dateColor = outreachDateColor(dateStr)
+  const bizDays = businessDaysSince(dateStr)
+  const touch = parseTouchHistory(persona.touchHistory)
 
   const cohortCount = persona.expertCohorts
     ? persona.expertCohorts.trim().split('\n').filter(l => l.trim()).length
@@ -48,6 +50,10 @@ function PersonaCard({ persona, isExpanded, onToggle }) {
         <div className="persona-card-title-row">
           <div className="persona-card-title">{persona.title}</div>
           <div className="persona-card-badges">
+            {persona.seniorityLevel && <span className="badge badge-muted">{shortenTier(persona.seniorityLevel)}</span>}
+            {persona.serviceLine && persona.serviceLine.toLowerCase() !== 'general' && (
+              <span className="badge badge-muted">{persona.serviceLine}</span>
+            )}
             <span className={`badge badge-${conf}`}>{persona.confidence || 'Unknown'}</span>
             {persona.bestChannel && <span className="text-muted text-small">{persona.bestChannel}</span>}
           </div>
@@ -57,14 +63,16 @@ function PersonaCard({ persona, isExpanded, onToggle }) {
             <span className="outreach-date-badge">
               <span className={`outreach-dot outreach-dot-${dateColor}`} />
               {dateStr}
+              {bizDays !== null && <span className="biz-days-suffix"> · {bizDays}bd ago</span>}
             </span>
           )}
-          {persona.totalEmailsSent && (
+          {touch?.email != null && <span className="persona-stat-chip">email ×{touch.email}</span>}
+          {touch?.linkedin != null && <span className="persona-stat-chip">LI ×{touch.linkedin}</span>}
+          {touch?.calls != null && <span className="persona-stat-chip">calls ×{touch.calls}</span>}
+          {!touch && persona.totalEmailsSent && (
             <span className="persona-stat-chip">{persona.totalEmailsSent} sent</span>
           )}
-          {persona.openReplyRate && (
-            <span className="persona-stat-chip">{persona.openReplyRate}</span>
-          )}
+          {persona.openReplyRate && <span className="persona-stat-chip">{persona.openReplyRate}</span>}
           {cohortCount > 0 && (
             <span className="persona-stat-chip persona-cohort-chip">
               {cohortCount} cohort{cohortCount !== 1 ? 's' : ''}
@@ -165,4 +173,44 @@ function outreachDateColor(dateStr) {
   if (days < 14) return 'confirmed'
   if (days < 28) return 'emerging'
   return 'retired'
+}
+
+function businessDaysSince(dateStr) {
+  if (!dateStr) return null
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return null
+  const today = new Date()
+  if (d >= today) return 0
+  let days = 0
+  const cur = new Date(d)
+  while (cur < today) {
+    cur.setDate(cur.getDate() + 1)
+    const day = cur.getDay()
+    if (day !== 0 && day !== 6) days++
+  }
+  return days
+}
+
+function parseTouchHistory(text) {
+  if (!text) return null
+  const email = text.match(/Email:\s*(\d+)/i)?.[1]
+  const linkedin = text.match(/LinkedIn:\s*(\d+)/i)?.[1]
+  const calls = text.match(/Calls?:\s*(\d+)/i)?.[1]
+  if (!email && !linkedin && !calls) return null
+  return {
+    email: email != null ? parseInt(email, 10) : null,
+    linkedin: linkedin != null ? parseInt(linkedin, 10) : null,
+    calls: calls != null ? parseInt(calls, 10) : null,
+  }
+}
+
+function shortenTier(level) {
+  if (!level) return level
+  const l = level.toLowerCase()
+  if (l.includes('c-suite') || l === 'c-suite') return 'C-Suite'
+  if (l.includes('vp') || l.includes('svp') || l.includes('vice president')) return 'VP/SVP'
+  if (l.includes('director')) return 'Dir.'
+  if (l.includes('manager')) return 'Mgr.'
+  if (l.includes('clinical') || l.includes('frontline')) return 'Clinical'
+  return level
 }

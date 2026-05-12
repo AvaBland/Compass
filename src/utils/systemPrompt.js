@@ -278,22 +278,39 @@ Recommendations to act on now:
   2. [specific action]
   3. [specific action]
 
+LEARNINGS
+[date] — [key observation — no constraint on topic, type, or format; whatever insight is most worth remembering]
+[date] — [another observation]
+
+EMAIL SEQUENCE DATA
+Average emails before first reply: [N — update running average each session]
+Average emails before meeting conversion: [N — update running average]
+Average days between touches: [N]
+Reply distribution:
+  Email 1: [N] | Email 2: [N] | Email 3: [N] | Email 4: [N] | Email 5+: [N]
+Conversion distribution:
+  Email 1: [N] | Email 2: [N] | Email 3: [N] | Email 4: [N] | Email 5+: [N]
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SECTION B — PERSONA INTELLIGENCE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [Repeat block per persona type observed]
 
 Persona: [Title / function]
+Seniority level: [C-Suite | VP/SVP | Director | Manager | Clinical-Frontline]
+Service line: [Oncology | Operations | Nursing | Finance | IT | Clinical | Strategy | General]
 Last outreach date: [most recent date any outreach data was input for this persona group]
+Touch history:
+  Email: [N sends] | LinkedIn: [N messages] | Calls: [N calls]
 Total emails sent: [running count]
 Open rate / Reply rate: [e.g. "42% open / 3% reply — based on N sends"]
 Engagement pattern: [How this persona typically behaves — opens, clicks, replies, ghosts]
 Expert cohorts:
   [Cohort name] — Last contacted: [date] — Emails sent: [count] — [signal notes]
 Email framework analysis:
-  [Framework type] — [Used N times] — [Result: worked / mixed / flat]
+  [DO NOT use predefined categories. Observe what is actually in the email and label it with your own language. Note the narrative structure, emotional lever, social proof mechanism, urgency signal, specificity level, reference frame (peer benchmark / authority / loss aversion / aspiration / etc.), CTA design, and anything else a seasoned analyst would notice. Name things you actually see, not a taxonomy you were given.]
 Value propositions used:
-  [Angle or theme] — [Result: worked / didn't work / mixed]
+  [Observe the actual value angle delivered — not a generic label. Note what specific outcome was promised, to whom, in what context, and how it was framed.]
 Subject lines — resonant:
   [Subject line] — [open rate or signal]
 Subject lines — flat:
@@ -403,7 +420,18 @@ NEXT MOVES
   2. [same structure, up to 5 total]
 
 HOLD
-  • [what to pause and why — name the signal threshold that would change this]`
+  • [what to pause and why — name the signal threshold that would change this]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION I — CUSTOM TRACKING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[User-defined questions and metrics tracked over time. Updated every session when relevant data is available.]
+
+Question: [user's question or metric to track]
+Answer: [current best answer based on accumulated intelligence data]
+Last updated: [date]
+Trend: [improving / declining / stable / insufficient data]
+Notes: [any context about confidence level or data gaps]`
 
 export const UPDATE_APPEND = `
 
@@ -417,9 +445,11 @@ Your job:
 5. Maintain running state for each persona entry:
    - "Last outreach date" should reflect the most recent date any outreach data was provided for that persona group
    - "Total emails sent" should be incremented when new send volume is reported for that persona
+   - "Touch history" should be maintained as cumulative counts: Email, LinkedIn, and Calls each tracked separately and incremented as new data arrives
+   - "Seniority level" and "Service line" should be inferred from the persona title if not explicitly provided — use C-Suite / VP/SVP / Director / Manager / Clinical-Frontline as the tier options
    - Expert cohorts (named sub-groups like "Oncology Researchers at AMCs") must be nested under their parent persona in Section B — never listed as standalone persona entries
 6. When the user provides email content alongside engagement metrics (open rate, click rate, reply rate), perform deep content synthesis:
-   - Analyze the email's structure: opening hook type (curiosity / pain / stat / question), value proposition angle, CTA type (reply / click / schedule), tone, and length signal
+   - DO NOT use predefined framework labels (question-led, problem-led, etc.) — observe what is actually in the email and describe it in your own analytical language: what narrative device opens the email, what emotional lever it pulls, what social proof or authority signal it uses, what the CTA is designed to do, what implicit promise it makes, what the prospect must believe to respond
    - Cross-reference the structure with the engagement result to explain WHY the pattern occurred:
      • High click + no reply → email built genuine interest and delivered value, but the CTA created friction — either too large an ask, wrong timing, or the reply mechanism is unclear
      • High open + no click + no reply → subject line over-promised; email body under-delivered on the expectation set
@@ -427,6 +457,14 @@ Your job:
      • High open + high click + no reply → strong interest signal with a broken conversion step — diagnose the CTA specifically
    - Store this synthesis under the relevant persona's "Email framework analysis" and in Section D narrative intelligence
    - Do not simply restate the engagement numbers — explain the underlying mechanism
+   - Apply the same open-ended observation discipline to value propositions used: describe what specific outcome was promised, to whom, how it was framed, and what it required the prospect to believe
+7. Maintain email sequence data in Section A:
+   - Update running averages (emails before first reply, emails before conversion, days between touches) as new data arrives
+   - Update the reply and conversion distribution tallies — increment the appropriate email number bucket when a reply or conversion is reported and the email number in the sequence is known or can be inferred
+   - Learnings: add 1-3 new observations per session to the LEARNINGS log in Section A. These can be anything — a pattern you noticed, a hypothesis that got confirmed or reversed, a timing signal, a competitive signal, a demographic insight, a language pattern, anything worth remembering. Keep the most recent 12 entries. No constraints on what counts as a learning.
+8. Custom Tracking (Section I):
+   - If the user submits a question or data note that is intended to track a specific metric over time — either explicitly (they say "track" or "monitor") or contextually — add it to Section I and provide a current best answer based on available intelligence
+   - Update answers to existing Section I questions each session when new relevant data is available, and update the Trend field
 7. ALWAYS update Section H (Action Board) with current state after every data input. This is the primary operational layer of the dashboard — it must always reflect the sharpest available picture of:
    - WHAT IS WORKING: which specific personas, channels, themes, and collateral are producing signal right now. Be specific — name the persona, name the email type, name the asset.
    - WHAT IS NOT WORKING: what is failing and diagnose root cause. Do not say "open rates are low" — say why. Is the subject line wrong? Is the wrong persona being targeted? Is the CTA asking for too much?
@@ -452,29 +490,27 @@ COMPASS INTELLIGENCE FILE
 
 export const BRIEFING_APPEND = `
 
-Generate a concise executive briefing. The audience is sales leadership and reps in a Monday meeting. Be specific and actionable — every sentence must change a decision. No filler, no generic advice.
+Generate a focused weekly briefing. This is a 5-minute stand-up, not a comprehensive review. Total word count: under 350 words. Do NOT recap every persona or segment. Skip anything that has not changed or has no new signal.
 
-Structure your response exactly as follows:
+Structure exactly as follows:
 
-WHAT'S WORKING
-2-3 bullet points. Name specific personas, org types, or message angles producing positive signal and why they are working.
+NEW THIS WEEK
+1-3 bullets max. New signals or changes from the prior state only. If nothing meaningfully changed, write "No new signals this week — see Action Board for current priorities."
 
-WHAT'S NOT WORKING
-2-3 bullet points. Name what is underperforming, which segments, and the most likely root cause.
+RE-ENGAGEMENT ALERTS
+Personas or segments that have not been touched in 4+ weeks. For each:
+• Who: persona + org type
+• Last touched: [N weeks ago]
+• Suggested re-entry: the exact theme and channel — and why this framing makes sense right now given what we know about this persona, not just "check in"
+• Move type: Value give or Meeting ask, based on the history
 
-NEXT MOVES
-Up to 5 numbered items. For each, be fully specific:
-• WHO: exact persona + org type
-• CHANNEL: email / LinkedIn / call
-• COLLATERAL: None, or the specific asset to use
-• THEME: the exact message angle — not "follow up" but the actual narrative to lead with
-• MOVE TYPE: Value give (not ready for a meeting ask) OR Meeting ask (signal is warm enough) — state which and why
-• WHY NOW: the specific engagement signal driving this
+THE ONE CHANGE THIS WEEK
+One sentence. The single most important adjustment — what to start, stop, or shift based on the current pattern.
 
-HOLD / PULL BACK
-Up to 3 items. What to stop or pause and why.
+HOLD
+1-2 items max.
 
-Keep the entire briefing under 600 words. Also update Section H of the Intelligence File to reflect the current Action Board state based on this briefing.
+Keep the briefing under 350 words. Then return the complete updated Intelligence File with Section H (Action Board) fully updated to reflect current state.
 
 Return in exactly this format:
 [BRIEFING]

@@ -13,6 +13,7 @@ export function parseIntelligenceFile(text) {
     content: null,
     patternLog: [],
     actionBoard: null,
+    customTracking: [],
   }
 
   const lastUpdatedMatch = text.match(/Last updated:\s*(.+)/i)
@@ -31,6 +32,7 @@ export function parseIntelligenceFile(text) {
   if (sections.F) result.content = parseContent(sections.F)
   if (sections.G) result.patternLog = parsePatternLog(sections.G)
   if (sections.H) result.actionBoard = parseActionBoard(sections.H)
+  if (sections.I) result.customTracking = parseCustomTracking(sections.I)
 
   return result
 }
@@ -39,7 +41,7 @@ function splitSections(text) {
   const sections = {}
   const divider = /━{10,}/
 
-  const sectionHeaderRe = /━{10,}\s*\nSECTION ([A-H]) —[^\n]*\n━{10,}/g
+  const sectionHeaderRe = /━{10,}\s*\nSECTION ([A-I]) —[^\n]*\n━{10,}/g
   let match
   const boundaries = []
 
@@ -71,14 +73,20 @@ function extractField(text, label) {
 }
 
 function parsePerformanceOverview(text) {
+  const learningsRaw = extractSubsection(text, 'LEARNINGS')
+  const seqRaw = extractSubsection(text, 'EMAIL SEQUENCE DATA')
   return {
-    // New Performance Overview fields
+    // Performance Overview fields
     bestSendTime: extractField(text, 'Best send time'),
     topSubjectLines: extractField(text, 'Top subject lines by open rate'),
     highestReplySegments: extractField(text, 'Highest reply segments'),
     highestConversionSegments: extractField(text, 'Highest conversion segments'),
     negativeTrends: extractField(text, 'Negative trends'),
     recommendations: extractField(text, 'Recommendations to act on now'),
+    // Learnings log
+    learnings: parseLearnings(learningsRaw),
+    // Email sequence analytics
+    emailSequence: parseEmailSequenceData(seqRaw),
     // Legacy Strategic Posture fields (backward compat)
     icpHypothesis: extractField(text, 'Current best ICP hypothesis'),
     strongestNarrative: extractField(text, 'Current strongest narrative angle'),
@@ -89,11 +97,58 @@ function parsePerformanceOverview(text) {
   }
 }
 
+function parseLearnings(text) {
+  if (!text) return []
+  return text
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => l && l.includes('—'))
+    .map(line => {
+      const idx = line.indexOf('—')
+      return { date: line.slice(0, idx).trim(), observation: line.slice(idx + 1).trim() }
+    })
+    .filter(l => l.date && l.observation)
+    .slice(0, 12)
+}
+
+function parseEmailSequenceData(text) {
+  if (!text) return null
+  return {
+    avgEmailsToReply: extractField(text, 'Average emails before first reply'),
+    avgEmailsToConversion: extractField(text, 'Average emails before meeting conversion'),
+    avgDaysBetweenTouches: extractField(text, 'Average days between touches'),
+    replyDist: parseDistribution(extractField(text, 'Reply distribution')),
+    conversionDist: parseDistribution(extractField(text, 'Conversion distribution')),
+    raw: text,
+  }
+}
+
+function parseDistribution(text) {
+  if (!text) return []
+  return [...text.matchAll(/Email\s+(\d+\+?):\s*(\d+)/gi)]
+    .map(m => ({ label: `E${m[1]}`, value: parseInt(m[2], 10) }))
+}
+
+function parseCustomTracking(text) {
+  if (!text) return []
+  const blocks = ('\n' + text).split(/\n\s*Question:/i).slice(1).map(b => ('Question:' + b).trim())
+  return blocks.map(block => ({
+    question: extractField(block, 'Question'),
+    answer: extractField(block, 'Answer'),
+    lastUpdated: extractField(block, 'Last updated'),
+    trend: extractField(block, 'Trend'),
+    notes: extractField(block, 'Notes'),
+  })).filter(q => q.question)
+}
+
 function parsePersonas(text) {
   const blocks = text.split(/\n(?=Persona:)/i).filter(b => b.trim())
   return blocks.map(block => ({
     title: extractField(block, 'Persona'),
+    seniorityLevel: extractField(block, 'Seniority level'),
+    serviceLine: extractField(block, 'Service line'),
     lastOutreachDate: extractField(block, 'Last outreach date'),
+    touchHistory: extractField(block, 'Touch history'),
     totalEmailsSent: extractField(block, 'Total emails sent'),
     openReplyRate: extractField(block, 'Open rate / Reply rate'),
     engagementPattern: extractField(block, 'Engagement pattern'),
