@@ -895,6 +895,192 @@ textarea.mono { font-family: var(--font-mono); font-size: 12px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 3px; }
 
+/* ── Action Board ── */
+.action-board-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.action-status-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.action-status-block {
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+
+.action-status-working {
+  background: var(--confirmed-dim);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.action-status-not-working {
+  background: var(--retired-dim);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.action-status-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.action-status-working .action-status-label { color: var(--confirmed); }
+.action-status-not-working .action-status-label { color: var(--danger); }
+
+.action-bullet-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.action-bullet-list li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: 16px;
+  position: relative;
+}
+
+.action-bullet-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+  font-size: 11px;
+  top: 1px;
+}
+
+.action-section-heading {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.action-moves-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.move-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.move-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.move-card-number {
+  width: 22px;
+  height: 22px;
+  background: var(--accent-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-hover);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.move-card-who {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 1.4;
+}
+
+.move-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.move-chip {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.move-chip-channel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+}
+
+.move-chip-meeting {
+  background: var(--accent-dim);
+  color: var(--accent-hover);
+  border: 1px solid var(--accent-dim-hover);
+}
+
+.move-chip-value {
+  background: var(--confirmed-dim);
+  color: var(--confirmed);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.move-card-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.move-card-why { color: var(--text-muted); }
+
+.move-field-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  min-width: 62px;
+  padding-top: 1px;
+  flex-shrink: 0;
+}
+
+.move-field-value { color: var(--text-secondary); }
+.move-card-why .move-field-value { color: var(--text-muted); font-style: italic; }
+
+.action-hold-block {
+  background: var(--emerging-dim);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+
+.action-hold-block .action-bullet-list li::before { color: var(--warning); }
+
 /* ── Performance Overview ── */
 .perf-stats-row {
   display: grid;
@@ -1141,4 +1327,5 @@ textarea.mono { font-family: var(--font-mono); font-size: 12px; }
   .nav { padding: 0 16px; }
   .nav-logo { margin-right: 16px; }
   .perf-insights-row { grid-template-columns: 1fr; }
+  .action-status-row { grid-template-columns: 1fr; }
 }

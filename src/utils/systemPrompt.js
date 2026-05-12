@@ -379,7 +379,31 @@ SECTION G — PATTERN LOG
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [Running log of confirmed patterns, emerging signals, and retired hypotheses]
 
-[Date] | [Confirmed/Emerging/Retired] | [Finding in one sentence]`
+[Date] | [Confirmed/Emerging/Retired] | [Finding in one sentence]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION H — ACTION BOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Last updated: [date]
+
+WHAT IS WORKING
+  • [specific persona / channel / theme / collateral producing signal — state exactly what is working and why]
+
+WHAT IS NOT WORKING
+  • [specific failure — diagnose root cause, not just "low open rate"]
+
+NEXT MOVES
+  1. Who: [persona + org type]
+     Channel: [email / LinkedIn / call]
+     Collateral: [None | name the specific asset — e.g. "AMC case study" or "scheduling ROI one-pager"]
+     Theme: [exact message angle to lead with]
+     Move type: [Value give — not ready for a meeting ask yet | Meeting ask — signal is warm enough]
+     Why now: [the specific signal driving this recommendation]
+
+  2. [same structure, up to 5 total]
+
+HOLD
+  • [what to pause and why — name the signal threshold that would change this]`
 
 export const UPDATE_APPEND = `
 
@@ -403,7 +427,19 @@ Your job:
      • High open + high click + no reply → strong interest signal with a broken conversion step — diagnose the CTA specifically
    - Store this synthesis under the relevant persona's "Email framework analysis" and in Section D narrative intelligence
    - Do not simply restate the engagement numbers — explain the underlying mechanism
-7. Surface a 1-2 sentence observation if something notable was detected, otherwise write NONE
+7. ALWAYS update Section H (Action Board) with current state after every data input. This is the primary operational layer of the dashboard — it must always reflect the sharpest available picture of:
+   - WHAT IS WORKING: which specific personas, channels, themes, and collateral are producing signal right now. Be specific — name the persona, name the email type, name the asset.
+   - WHAT IS NOT WORKING: what is failing and diagnose root cause. Do not say "open rates are low" — say why. Is the subject line wrong? Is the wrong persona being targeted? Is the CTA asking for too much?
+   - NEXT MOVES: up to 5 specific recommended actions. For each, specify:
+     • Who: the exact persona + org type to contact
+     • Channel: email, LinkedIn, or direct outreach
+     • Collateral: None, or name the specific asset to use (case study, data report, webinar invite, calculator — be specific)
+     • Theme: the exact message angle to lead with (not "be helpful" — the actual angle)
+     • Move type: either "Value give — not ready for a meeting ask yet" OR "Meeting ask — signal is warm enough". Always specify which and state the signal that drives the decision. High open + no reply = value give. Multiple clicks + reply = meeting ask.
+     • Why now: the specific engagement signal (opens, clicks, replies, recency) that makes this the right move right now
+   - HOLD: what to deprioritize and the specific signal threshold that would change the recommendation
+   If data is insufficient to make confident recommendations, say so explicitly and describe what signal would enable the recommendation.
+8. Surface a 1-2 sentence observation if something notable was detected, otherwise write NONE
 
 Return in exactly this format:
 [OBSERVATION]
@@ -426,16 +462,19 @@ WHAT'S WORKING
 WHAT'S NOT WORKING
 2-3 bullet points. Name what is underperforming, which segments, and the most likely root cause.
 
-RE-ENGAGEMENT PRIORITIES
-Up to 5 numbered items. For each:
-• WHO: specific persona + org type
-• HOW: exact message angle and channel
-• WHY: the signal that makes this the right move right now
+NEXT MOVES
+Up to 5 numbered items. For each, be fully specific:
+• WHO: exact persona + org type
+• CHANNEL: email / LinkedIn / call
+• COLLATERAL: None, or the specific asset to use
+• THEME: the exact message angle — not "follow up" but the actual narrative to lead with
+• MOVE TYPE: Value give (not ready for a meeting ask) OR Meeting ask (signal is warm enough) — state which and why
+• WHY NOW: the specific engagement signal driving this
 
 HOLD / PULL BACK
 Up to 3 items. What to stop or pause and why.
 
-Keep the entire briefing under 500 words. Then return the updated Intelligence File.
+Keep the entire briefing under 600 words. Also update Section H of the Intelligence File to reflect the current Action Board state based on this briefing.
 
 Return in exactly this format:
 [BRIEFING]

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { parseIntelligenceFile } from '../utils/parser'
 import { updateIntelligence, extractIntelligenceFile, extractObservation } from '../utils/api'
+import ActionBoard from './dashboard/ActionBoard'
 import PerformanceOverview from './dashboard/StrategicPosture'
 import PersonaCards from './dashboard/PersonaCards'
 import OrgCards from './dashboard/OrgCards'
@@ -136,6 +137,7 @@ export default function Dashboard({ apiKey, model, baseUrl, intelligenceFile, se
         </div>
       ) : (
         <div className="dashboard-grid">
+          <ActionBoard data={parsed.actionBoard} />
           <PerformanceOverview data={parsed.performanceOverview} />
           <PersonaCards personas={parsed.personas} />
           <OrgCards organizations={parsed.organizations} />

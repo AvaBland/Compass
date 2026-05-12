@@ -12,6 +12,7 @@ export function parseIntelligenceFile(text) {
     competitive: null,
     content: null,
     patternLog: [],
+    actionBoard: null,
   }
 
   const lastUpdatedMatch = text.match(/Last updated:\s*(.+)/i)
@@ -29,6 +30,7 @@ export function parseIntelligenceFile(text) {
   if (sections.E) result.competitive = parseCompetitive(sections.E)
   if (sections.F) result.content = parseContent(sections.F)
   if (sections.G) result.patternLog = parsePatternLog(sections.G)
+  if (sections.H) result.actionBoard = parseActionBoard(sections.H)
 
   return result
 }
@@ -37,7 +39,7 @@ function splitSections(text) {
   const sections = {}
   const divider = /━{10,}/
 
-  const sectionHeaderRe = /━{10,}\s*\nSECTION ([A-G]) —[^\n]*\n━{10,}/g
+  const sectionHeaderRe = /━{10,}\s*\nSECTION ([A-H]) —[^\n]*\n━{10,}/g
   let match
   const boundaries = []
 
@@ -178,6 +180,37 @@ function parsePatternLog(text) {
       }
     })
     .filter(Boolean)
+}
+
+function parseActionBoard(text) {
+  const nextMovesRaw = extractSubsection(text, 'NEXT MOVES')
+  return {
+    lastUpdated: extractField(text, 'Last updated'),
+    working: extractSubsection(text, 'WHAT IS WORKING'),
+    notWorking: extractSubsection(text, 'WHAT IS NOT WORKING'),
+    nextMoves: parseNextMoves(nextMovesRaw),
+    nextMovesRaw,
+    hold: extractSubsection(text, 'HOLD'),
+    raw: text,
+  }
+}
+
+function parseNextMoves(text) {
+  if (!text || !text.trim()) return []
+  // Prepend \n so the first numbered item is also caught by the split
+  const blocks = ('\n' + text)
+    .split(/\n\s*\d+\.\s+Who:/i)
+    .slice(1)
+    .map(b => ('Who:' + b).trim())
+    .filter(b => b !== 'Who:')
+  return blocks.map(block => ({
+    who: extractField(block, 'Who'),
+    channel: extractField(block, 'Channel'),
+    collateral: extractField(block, 'Collateral'),
+    theme: extractField(block, 'Theme'),
+    moveType: extractField(block, 'Move type'),
+    whyNow: extractField(block, 'Why now'),
+  }))
 }
 
 export function confidenceColor(confidence) {
