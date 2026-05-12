@@ -18,7 +18,9 @@ export default function Dashboard({ apiKey, model, baseUrl, intelligenceFile, se
   const [error, setError] = useState('')
   const [inputOpen, setInputOpen] = useState(!intelligenceFile)
 
-  const parsed = useMemo(() => parseIntelligenceFile(intelligenceFile), [intelligenceFile])
+  const parsed = useMemo(() => {
+    try { return parseIntelligenceFile(intelligenceFile) } catch { return null }
+  }, [intelligenceFile])
 
   async function handleSubmit() {
     if (!apiKey) { setError('No API key — go to Settings.'); return }
@@ -30,7 +32,11 @@ export default function Dashboard({ apiKey, model, baseUrl, intelligenceFile, se
       const response = await updateIntelligence(apiKey, model, baseUrl, intelligenceFile, input)
       const updated = extractIntelligenceFile(response)
       const obs = extractObservation(response)
-      setIntelligenceFile(updated || response)
+      if (!updated) {
+        setError('Response was incomplete — try again. Your intelligence file was not changed.')
+        return
+      }
+      setIntelligenceFile(updated)
       setObservation(obs)
       setInput('')
       setInputOpen(false)

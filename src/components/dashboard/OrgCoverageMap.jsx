@@ -7,7 +7,7 @@ const TIER_SHORT = {
   'Manager': 'Manager', 'Clinical / Frontline': 'Clinical', 'Other': 'Other',
 }
 
-export default function OrgCoverageMap({ personas, organizations }) {
+export default function OrgCoverageMap({ personas = [], organizations = [] }) {
   const mapped = personas.map(p => ({
     ...p,
     tier: normalizeTier(p.seniorityLevel) || inferTier(p.title),

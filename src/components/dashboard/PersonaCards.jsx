@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { confidenceColor } from '../../utils/parser'
 
-export default function PersonaCards({ personas }) {
+export default function PersonaCards({ personas = [] }) {
   const [expanded, setExpanded] = useState({})
   const toggle = i => setExpanded(e => ({ ...e, [i]: !e[i] }))
 

@@ -1,6 +1,6 @@
 import { patternStatusColor } from '../../utils/parser'
 
-export default function PatternLog({ patterns }) {
+export default function PatternLog({ patterns = [] }) {
   return (
     <div className="panel dashboard-full">
       <div className="panel-header">
