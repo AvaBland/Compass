@@ -67,7 +67,9 @@ function splitSections(text) {
 
 function extractField(text, label) {
   const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const re = new RegExp(escaped + ':\\s*\\n?([\\s\\S]*?)(?=\\n[A-Za-z][^:\\n]{0,50}:|$)', 'i')
+  // Stop at next field: a line that starts with a capital letter word followed by colon,
+  // but NOT an indented line (indented lines are sub-content of the current field)
+  const re = new RegExp(escaped + ':\\s*\\n?([\\s\\S]*?)(?=\\n[A-Za-z][^:\\n]{0,60}:\\s|$)', 'i')
   const m = text.match(re)
   return m ? m[1].trim() : ''
 }

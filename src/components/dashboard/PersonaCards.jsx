@@ -59,18 +59,19 @@ function PersonaCard({ persona, isExpanded, onToggle }) {
           </div>
         </div>
         <div className="persona-card-stats">
-          {dateStr && (
-            <span className="outreach-date-badge">
-              <span className={`outreach-dot outreach-dot-${dateColor}`} />
-              {dateStr}
-              {bizDays !== null && <span className="biz-days-suffix"> · {bizDays}bd ago</span>}
-            </span>
-          )}
-          {touch?.email != null && <span className="persona-stat-chip">email ×{touch.email}</span>}
-          {touch?.linkedin != null && <span className="persona-stat-chip">LI ×{touch.linkedin}</span>}
-          {touch?.calls != null && <span className="persona-stat-chip">calls ×{touch.calls}</span>}
-          {!touch && persona.totalEmailsSent && (
-            <span className="persona-stat-chip">{persona.totalEmailsSent} sent</span>
+          <span className="outreach-date-badge">
+            <span className={`outreach-dot outreach-dot-${dateColor}`} />
+            {dateStr || 'No outreach date'}
+            {bizDays !== null && <span className="biz-days-suffix"> · {bizDays}bd ago</span>}
+          </span>
+          {touch ? (
+            <>
+              <span className="persona-stat-chip">email ×{touch.email ?? '—'}</span>
+              <span className="persona-stat-chip">LI ×{touch.linkedin ?? '—'}</span>
+              <span className="persona-stat-chip">calls ×{touch.calls ?? '—'}</span>
+            </>
+          ) : (
+            <span className="persona-stat-chip text-muted">{persona.totalEmailsSent ? `${persona.totalEmailsSent} sent` : 'no touch data'}</span>
           )}
           {persona.openReplyRate && <span className="persona-stat-chip">{persona.openReplyRate}</span>}
           {cohortCount > 0 && (
@@ -193,6 +194,7 @@ function businessDaysSince(dateStr) {
 
 function parseTouchHistory(text) {
   if (!text) return null
+  // Match "Email: 12" or "Email: 12 sends" etc.
   const email = text.match(/Email:\s*(\d+)/i)?.[1]
   const linkedin = text.match(/LinkedIn:\s*(\d+)/i)?.[1]
   const calls = text.match(/Calls?:\s*(\d+)/i)?.[1]
